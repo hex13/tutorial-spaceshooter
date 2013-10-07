@@ -1,6 +1,7 @@
 var images = {};  
 var entities = [];
 var canvas, ctx;
+var player;
 
 function loadImages(directory, fileNames, onComplete) {
     var imagesLeft = fileNames.length;
@@ -49,7 +50,17 @@ function initialize() {
     console.log(images['player']);
     console.log(images['ufo']);    
 
-    createEntity('player', {x:300,y:280})
+    player = createEntity('player', {x:300,y:280, speed:4});
+    player.input = function(key) {
+        switch(key){ 
+            case 'left': this.x -= this.speed; break;
+            case 'right': this.x += this.speed; break;
+            case 'up': this.y -= this.speed; break;
+            case 'down': this.y += this.speed; break;
+
+        }
+    }
+
     createEntity('ufo', {x:0, y:20, vx:1, vy:0.1})
     createEntity('ufo', {x:120, y:80, vx:1.1, vy:0})    
     createEntity('ufo', {x:40, y:130, vx:1.05, vy:0})
@@ -78,4 +89,8 @@ function initCanvas() {
  
 $(document).ready(function() {
     loadImages('images', ['player.png', 'ufo.png'], initialize);    
+    $(document).keydown(function(e) {
+        key = {37: 'left', 38: 'up', 39:'right', 40:'down'}[e.keyCode];
+        player.input(key)
+    })
 });
