@@ -3,6 +3,8 @@ var entities = [];
 var canvas, ctx;
 var player;
 
+var MISSILE_SPEED = 3;
+
 function loadImages(directory, fileNames, onComplete) {
     var imagesLeft = fileNames.length;
     
@@ -56,7 +58,13 @@ function initialize() {
             case 'left': this.x -= this.speed; break;
             case 'right': this.x += this.speed; break;
             case 'up': this.y -= this.speed; break;
-            case 'down': this.y += this.speed; break;
+            case 'down': this.y += this.speed; break;            
+            case 'fire': 
+                var missile = createEntity('missile', {}); 
+                missile.x = this.x + this.img.width / 2 - missile.img.width / 2;
+                missile.y = this.y - missile.img.height;                
+                missile.vy = -MISSILE_SPEED;
+                break;
 
         }
     }
@@ -88,9 +96,9 @@ function initCanvas() {
  
  
 $(document).ready(function() {
-    loadImages('images', ['player.png', 'ufo.png'], initialize);    
+    loadImages('images', ['player.png', 'ufo.png', 'missile.png'], initialize);    
     $(document).keydown(function(e) {
-        key = {37: 'left', 38: 'up', 39:'right', 40:'down'}[e.keyCode];
+        var key = {37: 'left', 38: 'up', 39:'right', 40:'down', 32:'fire'}[e.keyCode];
         player.input(key)
     })
 });
